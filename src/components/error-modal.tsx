@@ -1,10 +1,11 @@
-"use client"
-import { useErrorModal } from '../hooks/error-modal-context';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
-import { AlertTriangle } from 'lucide-react';
+'use client'
+import { AlertTriangle } from 'lucide-react'
+
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog'
+import { useErrorModal } from '../hooks/ui/error-modal-context'
 
 export function ErrorModal() {
-  const { isOpen, message, closeModal } = useErrorModal();
+  const { isOpen, message, closeModal } = useErrorModal()
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
@@ -20,5 +21,5 @@ export function ErrorModal() {
         </DialogHeader>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

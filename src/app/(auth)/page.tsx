@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react'
-import { useAuth } from '@/hooks/auth-context'
+
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/hooks/auth-context'
 
 export default function HomePage() {
   const { user, logout } = useAuth()

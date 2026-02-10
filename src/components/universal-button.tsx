@@ -1,8 +1,10 @@
-"use client"
+'use client'
 
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { LucideIcon } from 'lucide-react';
+import React from 'react'
+
+import { LucideIcon } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 export interface UniversalButtonProps {
   type: 'full' | 'icon' | 'simple';
@@ -11,7 +13,7 @@ export interface UniversalButtonProps {
   onClick: () => void;
   variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 }
-    
+
 export const UniversalButton: React.FC<UniversalButtonProps> = ({
   type,
   text,
@@ -21,34 +23,34 @@ export const UniversalButton: React.FC<UniversalButtonProps> = ({
 }) => {
   const renderContent = () => {
     switch (type) {
-      case 'full':
-        return (
-          <>
-            <Icon />
-            {text}
-          </>
-        );
-      case 'icon':
-        return <Icon />;
-      case 'simple':
-        return text;
-      default:
-        return text;
+    case 'full':
+      return (
+        <>
+          <Icon />
+          {text}
+        </>
+      )
+    case 'icon':
+      return <Icon />
+    case 'simple':
+      return text
+    default:
+      return text
     }
-  };
+  }
 
   const getSize = () => {
     switch (type) {
-      case 'icon':
-        return 'icon';
-      default:
-        return 'default';
+    case 'icon':
+      return 'icon'
+    default:
+      return 'default'
     }
-  };
+  }
 
   return (
     <Button size={getSize()} variant={variant} onClick={onClick}>
       {renderContent()}
     </Button>
-  );
-};
+  )
+}

@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+'use client'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { createUserformSchema } from "../../utils/forms/create-user-form"
+import { useState } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -13,12 +15,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { useErrorModal } from "../../hooks/error-modal-context"
-import { loginFormSchema } from "@/utils/forms/login-form"
-import { useAuth } from "@/hooks/auth-context"
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { useAuth } from '@/hooks/auth-context'
+import { loginFormSchema } from '@/utils/forms/schemas/login-form'
+
+import { useErrorModal } from '../../hooks/ui/error-modal-context'
 
 export function LoginForm() {
   const [serverSuccess, setServerSuccess] = useState<string | null>(null)
@@ -28,10 +30,10 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema as any),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-    mode: "onSubmit",
+    mode: 'onSubmit',
   })
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
@@ -40,13 +42,13 @@ export function LoginForm() {
     try {
       const success = await login(values.email, values.password)
       if (success) {
-        setServerSuccess("Login successful!")
+        setServerSuccess('Login successful!')
         form.reset()
       } else {
-        openModal("Invalid email or password")
+        openModal('Invalid email or password')
       }
     } catch {
-      openModal("Failed to login")
+      openModal('Failed to login')
     }
   }
 
@@ -93,7 +95,7 @@ export function LoginForm() {
         )}
 
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Logging in..." : "Log in"}
+          {form.formState.isSubmitting ? 'Logging in...' : 'Log in'}
         </Button>
       </form>
     </Form>

@@ -1,11 +1,11 @@
-import * as React from "react"
+import * as React from 'react'
 
 export interface ToastProps {
   id: string
   title?: React.ReactNode
   description?: React.ReactNode
   action?: React.ReactElement
-  variant?: "default" | "destructive"
+  variant?: 'default' | 'destructive'
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }

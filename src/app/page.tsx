@@ -1,17 +1,18 @@
 'use client'
-import { useAuth } from '@/hooks/auth-context';
-import { LoginPage } from '@/_components/pages/login-page';
-import HomePage from './(auth)/page';
+import { LoginPage } from '@/_components/pages/login-page'
+import { useAuth } from '@/hooks/auth-context'
+
+import HomePage from './(auth)/page'
 
 export default function Home() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth()
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <div>Loading...</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -20,5 +21,5 @@ export default function Home() {
         {isAuthenticated ? <HomePage /> : <LoginPage />}
       </div>
     </div>
-  );
+  )
 }

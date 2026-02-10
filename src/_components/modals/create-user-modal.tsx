@@ -1,9 +1,12 @@
-"use client"
+'use client'
 
-import React from 'react';
-import { UniversalModal } from '@/components/universal-modal';
-import { CreateUserForm } from '../forms/create-user-form';
-import { Plus } from 'lucide-react';
+import React from 'react'
+
+import { Plus } from 'lucide-react'
+
+import { UniversalModal } from '@/components/universal-modal'
+
+import { CreateUserForm } from '../forms/create-user-form'
 
 export default function CreateUserModal() {
   return (
@@ -19,5 +22,5 @@ export default function CreateUserModal() {
     >
       <CreateUserForm />
     </UniversalModal>
-  );
+  )
 }

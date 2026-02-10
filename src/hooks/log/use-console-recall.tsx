@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback } from 'react'
 
 interface ConsoleRecallState {
   isConsoleVisible: boolean
@@ -14,7 +14,7 @@ export function useConsoleRecall(): ConsoleRecallState {
 
   // Load initial state from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("console-recall-visible")
+    const saved = localStorage.getItem('console-recall-visible')
     if (saved !== null) {
       setIsConsoleVisible(JSON.parse(saved))
     }
@@ -22,7 +22,7 @@ export function useConsoleRecall(): ConsoleRecallState {
 
   // Save state to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem("console-recall-visible", JSON.stringify(isConsoleVisible))
+    localStorage.setItem('console-recall-visible', JSON.stringify(isConsoleVisible))
   }, [isConsoleVisible])
 
   const toggleConsole = useCallback(() => {
@@ -41,8 +41,8 @@ export function useConsoleRecall(): ConsoleRecallState {
   useEffect(() => {
     if (isConsoleVisible) {
       // Create a floating console overlay
-      const consoleOverlay = document.createElement("div")
-      consoleOverlay.id = "console-recall-overlay"
+      const consoleOverlay = document.createElement('div')
+      consoleOverlay.id = 'console-recall-overlay'
       consoleOverlay.style.cssText = `
         position: fixed;
         bottom: 20px;
@@ -61,7 +61,7 @@ export function useConsoleRecall(): ConsoleRecallState {
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       `
 
-      const header = document.createElement("div")
+      const header = document.createElement('div')
       header.style.cssText = `
         display: flex;
         justify-content: space-between;
@@ -75,8 +75,8 @@ export function useConsoleRecall(): ConsoleRecallState {
         <button id="close-console" style="background: none; border: none; color: #ff0000; cursor: pointer; font-size: 16px;">×</button>
       `
 
-      const logContainer = document.createElement("div")
-      logContainer.id = "console-log-container"
+      const logContainer = document.createElement('div')
+      logContainer.id = 'console-log-container'
       logContainer.style.cssText = `
         height: 250px;
         overflow-y: auto;
@@ -89,20 +89,20 @@ export function useConsoleRecall(): ConsoleRecallState {
       document.body.appendChild(consoleOverlay)
 
       // Load existing logs from localStorage
-      const existingLogs = JSON.parse(localStorage.getItem("console-logs") || "[]")
+      const existingLogs = JSON.parse(localStorage.getItem('console-logs') || '[]')
       logContainer.innerHTML = existingLogs
         .slice(-50) // Show last 50 logs
         .map(
           (log: any) =>
             `<div style="margin-bottom: 2px; color: ${getLogColor(log.type)};">[${log.timestamp}] ${log.type.toUpperCase()}: ${log.message}</div>`,
         )
-        .join("")
+        .join('')
 
       // Auto-scroll to bottom
       logContainer.scrollTop = logContainer.scrollHeight
 
       // Close button functionality
-      const closeButton = document.getElementById("close-console")
+      const closeButton = document.getElementById('close-console')
       if (closeButton) {
         closeButton.onclick = () => {
           setIsConsoleVisible(false)
@@ -111,7 +111,7 @@ export function useConsoleRecall(): ConsoleRecallState {
 
       // Cleanup function
       return () => {
-        const overlay = document.getElementById("console-recall-overlay")
+        const overlay = document.getElementById('console-recall-overlay')
         if (overlay) {
           document.body.removeChild(overlay)
         }
@@ -129,13 +129,13 @@ export function useConsoleRecall(): ConsoleRecallState {
 
 function getLogColor(type: string): string {
   switch (type) {
-    case "error":
-      return "#ff4444"
-    case "warn":
-      return "#ffaa00"
-    case "info":
-      return "#4488ff"
-    default:
-      return "#00ff00"
+  case 'error':
+    return '#ff4444'
+  case 'warn':
+    return '#ffaa00'
+  case 'info':
+    return '#4488ff'
+  default:
+    return '#00ff00'
   }
 }

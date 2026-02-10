@@ -1,1 +1,1 @@
-export * from './basic-response';
+export * from './basic-response'

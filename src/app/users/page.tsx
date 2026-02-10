@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { User } from '@/types/models/user-model'
+
 import { UserCard } from '@/_components/cards/user-card'
 import { UniversalLoader } from '@/components/universal-loader'
+import { User } from '@/types/models/user/user-model'
 
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([])
@@ -46,7 +47,7 @@ export default function UserList() {
         <div>
           {users.map((user) => (
             <li key={user.id}>
-            <UserCard {...user} />
+              <UserCard {...user} />
             </li>
           ))}
         </div>

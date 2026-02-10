@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+'use client'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { createUserformSchema } from "../../utils/forms/create-user-form"
+import { useState } from 'react'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -13,10 +15,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { useErrorModal } from "../../hooks/error-modal-context"
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+import { useErrorModal } from '../../hooks/ui/error-modal-context'
+import { createUserformSchema } from '../../utils/forms/schemas/create-user-form'
 
 export function CreateUserForm() {
   const [serverSuccess, setServerSuccess] = useState<string | null>(null)
@@ -25,21 +28,21 @@ export function CreateUserForm() {
   const form = useForm<z.infer<typeof createUserformSchema>>({
     resolver: zodResolver(createUserformSchema as any),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: '',
+      email: '',
+      password: '',
     },
-    mode: "onSubmit",
+    mode: 'onSubmit',
   })
 
   async function onSubmit(values: z.infer<typeof createUserformSchema>) {
     setServerSuccess(null)
 
     try {
-      const res = await fetch("/api/user", {
-        method: "POST",
+      const res = await fetch('/api/user', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(values),
       })
@@ -48,14 +51,14 @@ export function CreateUserForm() {
         const payload = (await res.json().catch(() => null)) as
           | { error?: string }
           | null
-        openModal(payload?.error ?? "Failed to create user")
+        openModal(payload?.error ?? 'Failed to create user')
         return
       }
 
-      setServerSuccess("User created.")
+      setServerSuccess('User created.')
       form.reset()
     } catch {
-      openModal("Failed to create user")
+      openModal('Failed to create user')
     }
   }
 
@@ -121,7 +124,7 @@ export function CreateUserForm() {
         )}
 
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Creating..." : "Create user"}
+          {form.formState.isSubmitting ? 'Creating...' : 'Create user'}
         </Button>
       </form>
     </Form>

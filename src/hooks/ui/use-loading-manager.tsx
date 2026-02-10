@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { useState, useCallback, createContext, useContext, type ReactNode } from "react"
+import { useState, useCallback, createContext, useContext, type ReactNode } from 'react'
 
 interface LoadingState {
   isLoading: boolean
@@ -56,7 +56,7 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
 export function useLoadingManager() {
   const context = useContext(LoadingContext)
   if (!context) {
-    throw new Error("useLoadingManager must be used within a LoadingProvider")
+    throw new Error('useLoadingManager must be used within a LoadingProvider')
   }
   return context
 }
