@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
-import api from '../lib/axios'
+import api from '@/lib/axios'
 
 interface User {
   id: string;
@@ -14,7 +14,8 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
+  logoutAllDevices: () => Promise<void>;
   isAuthenticated: boolean;
   loading: boolean;
 }
@@ -70,15 +71,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem('authToken')
-    setUser(null)
+  const logout = async (): Promise<void> => {
+    try {
+      // Call logout API to remove token from database
+      await api.post('/auth/logout')
+    } catch (error) {
+      console.error('Logout API error:', error)
+      // Continue with logout even if API fails
+    } finally {
+      localStorage.removeItem('authToken')
+      setUser(null)
+    }
+  }
+
+  const logoutAllDevices = async (): Promise<void> => {
+    try {
+      // Call logout all devices API
+      await api.delete('/auth/logout')
+    } catch (error) {
+      console.error('Logout all devices API error:', error)
+      // Continue with logout even if API fails
+    } finally {
+      localStorage.removeItem('authToken')
+      setUser(null)
+    }
   }
 
   const value: AuthContextType = {
     user,
     login,
     logout,
+    logoutAllDevices,
     isAuthenticated: !!user,
     loading,
   }

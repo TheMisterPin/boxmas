@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(npm ls:*)",
-      "Bash(pnpm eslint:*)"
+      "Bash(pnpm eslint:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

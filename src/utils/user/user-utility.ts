@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { BasicResponse } from '@/types/responses/basic-response'
+import bcrypt from 'bcrypt'
 
 export const getUserByEmail = async (email: string): Promise<BasicResponse> => {
   try {
@@ -44,9 +45,34 @@ export const checkPassword = async (email: string, password: string): Promise<Ba
   if (!result.success) {
     return { success: false, message: 'User not found', data: null, code: 404 }
   }
+
   const user = result.data
-  if (user && user.password === password) {
+
+  // Check if password is hashed (bcrypt hashes start with $2b$ or $2a$)
+  const isHashed = user.password.startsWith('$2')
+
+  let isValid = false
+  if (isHashed) {
+    // Use bcrypt compare for hashed passwords
+    isValid = await bcrypt.compare(password, user.password)
+  } else {
+    // MIGRATION PATH: Support plaintext passwords temporarily
+    // This allows existing users to log in while we migrate
+    isValid = user.password === password
+
+    // If valid, hash the password for future logins (opportunistic migration)
+    if (isValid) {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+      })
+    }
+  }
+
+  if (isValid) {
     return { success: true, data: user }
   }
+
   return { success: false, message: 'Incorrect password', data: null, code: 401 }
 }

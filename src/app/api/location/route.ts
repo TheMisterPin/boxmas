@@ -20,9 +20,15 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
-  const users = await getAllUsers()
+export async function GET(req: NextRequest) {
   try {
+    // Get authenticated user from middleware headers
+    const userId = req.headers.get('x-user-id')
+    const userEmail = req.headers.get('x-user-email')
+
+    console.log(`User ${userEmail} (${userId}) fetching locations`)
+
+    const users = await getAllUsers()
     if (users.success) {
       return NextResponse.json(users.data as User[], { status: 200 })
     } else {
