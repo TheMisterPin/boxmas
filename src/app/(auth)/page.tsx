@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/hooks/auth-context'
+import { useAuth } from '@/hooks'
 
 export default function HomePage() {
   const { user, logout } = useAuth()

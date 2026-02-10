@@ -4,8 +4,8 @@ import { Geist, Geist_Mono } from 'next/font/google'
 
 import './globals.css'
 import { ErrorModal } from '../components/error-modal'
-import { AuthProvider } from '../hooks/auth-context'
-import { ErrorModalProvider } from '../hooks/ui/error-modal-context'
+import { AuthProvider } from '../hooks'
+import { ErrorModalProvider } from '../hooks'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

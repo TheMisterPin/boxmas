@@ -1,6 +1,6 @@
 'use client'
 import { LoginPage } from '@/_components/pages/login-page'
-import { useAuth } from '@/hooks/auth-context'
+import { useAuth } from '@/hooks'
 
 import HomePage from './(auth)/page'
 

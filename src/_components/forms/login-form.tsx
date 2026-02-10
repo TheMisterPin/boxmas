@@ -17,10 +17,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/hooks/auth-context'
+import { useAuth } from '@/hooks'
+import { useErrorModal } from '@/hooks'
 import { loginFormSchema } from '@/utils/forms/schemas/login-form'
-
-import { useErrorModal } from '../../hooks/ui/error-modal-context'
 
 export function LoginForm() {
   const [serverSuccess, setServerSuccess] = useState<string | null>(null)
