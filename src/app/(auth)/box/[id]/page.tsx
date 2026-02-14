@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator'
 import { useErrorModal } from '@/hooks'
 import { apiClient } from '@/lib/axios'
 import { Box } from '@/types'
+import { downloadBoxQrPdf } from '@/utils/label/qr'
 import { logger } from '@/utils/logger/client-logger'
 
 export default function BoxDetailPage() {
@@ -52,18 +53,18 @@ export default function BoxDetailPage() {
     }
   }
 
-  const handleDownloadQr = () => {
+  const handleDownloadQr = async () => {
     if (!boxId) {
       return
     }
-
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(boxId)}`
-    const link = document.createElement('a')
-    link.href = qrUrl
-    link.download = `box-${boxId}.png`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    try {
+      await downloadBoxQrPdf(boxId)
+    } catch (error: any) {
+      logger.error('Failed to generate QR PDF', {
+        error: error?.message,
+      })
+      openModal('Failed to generate QR')
+    }
   }
 
   if (fetchingBox) {
