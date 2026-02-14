@@ -227,7 +227,16 @@ export async function deleteBox(
   boxId: string,
 ): Promise<BasicResponse> {
   try {
-    const existing = await prisma.box.findFirst({
+    if (!boxId) {
+      return {
+        success: false,
+        data: null,
+        message: 'Box id is required',
+        code: 400,
+      }
+    }
+
+    const result = await prisma.box.deleteMany({
       where: {
         id: boxId,
         location: {
@@ -236,7 +245,7 @@ export async function deleteBox(
       },
     })
 
-    if (!existing) {
+    if (result.count === 0) {
       return {
         success: false,
         data: null,
@@ -244,10 +253,6 @@ export async function deleteBox(
         code: 404,
       }
     }
-
-    await prisma.box.delete({
-      where: { id: boxId },
-    })
 
     return {
       success: true,

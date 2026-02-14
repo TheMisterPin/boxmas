@@ -25,11 +25,14 @@ import { apiClient } from '@/lib/axios'
 import { Box } from '@/types'
 import { uploadToImgbb } from '@/utils/media/upload-imgbb'
 
-interface BoxCardProps extends Box {
+interface BoxCardProps {
+  box: Box;
   onUpdated?: () => void;
 }
 
-export function BoxCard({ onUpdated, ...box } : BoxCardProps) {
+export function BoxCard(props : BoxCardProps) {
+  const { box, onUpdated } = props
+  const boxId = box?.id
   const router = useRouter()
   const { openModal } = useErrorModal()
   const [actionsOpen, setActionsOpen] = useState(false)
@@ -37,10 +40,10 @@ export function BoxCard({ onUpdated, ...box } : BoxCardProps) {
   const [longPressTriggered, setLongPressTriggered] = useState(false)
   const pressTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [name, setName] = useState(box.name)
-  const [description, setDescription] = useState(box.description ?? '')
-  const [closedImage, setClosedImage] = useState<string>(box.closedImage ?? '')
-  const [contentsImage, setContentsImage] = useState<string>(box.contentsImage ?? '')
+  const [name, setName] = useState(box?.name ?? '')
+  const [description, setDescription] = useState(box?.description ?? '')
+  const [closedImage, setClosedImage] = useState<string>(box?.closedImage ?? '')
+  const [contentsImage, setContentsImage] = useState<string>(box?.contentsImage ?? '')
   const [uploadingClosed, setUploadingClosed] = useState(false)
   const [uploadingContents, setUploadingContents] = useState(false)
 
@@ -66,7 +69,11 @@ export function BoxCard({ onUpdated, ...box } : BoxCardProps) {
     if (longPressTriggered) {
       return
     }
-    router.push(`/box/${box.id}`)
+    if (!boxId) {
+      openModal('Box id is missing')
+      return
+    }
+    router.push(`/box/${boxId}`)
   }
 
   const handleDelete = async () => {
@@ -75,8 +82,13 @@ export function BoxCard({ onUpdated, ...box } : BoxCardProps) {
       return
     }
 
+    if (!boxId) {
+      openModal('Box id is missing')
+      return
+    }
+
     try {
-      await apiClient.delete(`/box/${box.id}`)
+      await apiClient.delete(`/box/${boxId}`)
       setActionsOpen(false)
       if (onUpdated) {
         onUpdated()
@@ -87,8 +99,12 @@ export function BoxCard({ onUpdated, ...box } : BoxCardProps) {
   }
 
   const handleSave = async () => {
+    if (!boxId) {
+      openModal('Box id is missing')
+      return
+    }
     try {
-      await apiClient.patch(`/box/${box.id}`, {
+      await apiClient.patch(`/box/${boxId}`, {
         name,
         description,
         closedImage,
@@ -119,9 +135,9 @@ export function BoxCard({ onUpdated, ...box } : BoxCardProps) {
         </ItemMedia>
         <ItemContent>
           <ItemTitle className='text-xl  font-bold bg-linear-to-b from-stone-800/75 to-slate-700/75 text-transparent bg-clip-text flex w-full  pr-6'>
-            {box.name}
+            {box?.name ?? 'Box'}
           </ItemTitle>
-          {box.description && (
+          {box?.description && (
             <div className="text-sm text-muted-foreground">{box.description}</div>
           )}
         </ItemContent>

@@ -148,7 +148,7 @@ export default function LocationBoxesPage() {
               </p>
             ) : (
               boxes.map((box) => (
-                <BoxCard key={box.id} onUpdated={fetchBoxes} {...box} />
+                <BoxCard key={box.id} onUpdated={fetchBoxes} box={box} />
               ))
             )}
           </div>

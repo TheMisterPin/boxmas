@@ -113,7 +113,19 @@ export default function BoxDetailPage() {
             <div className="rounded-md border border-slate-400/50 bg-linear-to-r from-gray-50 to-stone-100/75 p-4">
               <div className="text-sm font-medium text-slate-700">Closed Box</div>
               {box.closedImage ? (
-                <img src={box.closedImage} alt="Closed box" className="mt-2 w-full rounded-md" />
+                <a
+                  href={box.closedImage}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block mt-2"
+                >
+                  <img
+                    src={box.closedImage}
+                    alt="Closed box"
+                    className="w-full max-h-96 rounded-md object-cover border border-slate-200"
+                    loading="lazy"
+                  />
+                </a>
               ) : (
                 <div className="text-sm text-muted-foreground mt-2">No photo yet.</div>
               )}
@@ -121,7 +133,19 @@ export default function BoxDetailPage() {
             <div className="rounded-md border border-slate-400/50 bg-linear-to-r from-gray-50 to-stone-100/75 p-4">
               <div className="text-sm font-medium text-slate-700">Contents</div>
               {box.contentsImage ? (
-                <img src={box.contentsImage} alt="Box contents" className="mt-2 w-full rounded-md" />
+                <a
+                  href={box.contentsImage}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block mt-2"
+                >
+                  <img
+                    src={box.contentsImage}
+                    alt="Box contents"
+                    className="w-full max-h-96 rounded-md object-cover border border-slate-200"
+                    loading="lazy"
+                  />
+                </a>
               ) : (
                 <div className="text-sm text-muted-foreground mt-2">No photo yet.</div>
               )}
