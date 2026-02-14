@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 
-import { User } from '@/types/models/user/user-model'
+import { getAuthFromRequest } from '@/utils/auth'
 import { createUser, getAllUsers } from '@/utils/user'
 
 export const runtime = 'nodejs'
@@ -24,11 +24,12 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    // Get authenticated user from middleware headers
-    const userId = req.headers.get('x-user-id')
-    const userEmail = req.headers.get('x-user-email')
+    const auth = await getAuthFromRequest(req)
+    if (!auth.valid || !auth.userId) {
+      return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 })
+    }
 
-    console.log(`User ${userEmail} (${userId}) fetching all users`)
+    console.log(`User ${auth.email} (${auth.userId}) fetching all users`)
 
     const users = await getAllUsers()
     if (users.success) {

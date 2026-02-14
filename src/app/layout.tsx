@@ -1,19 +1,17 @@
-import type { Metadata } from 'next'
 
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Maven_Pro } from 'next/font/google'
 
 import './globals.css'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { AuthProvider } from '@/hooks'
+import { ErrorModalProvider } from '@/hooks'
+
 import { ErrorModal } from '../components/error-modal'
-import { AuthProvider } from '../hooks'
-import { ErrorModalProvider } from '../hooks'
+import { LayoutWrapper } from '../components/layout-wrapper'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+import type { Metadata } from 'next'
+const mavenPro = Maven_Pro({
+  variable: '--font-maven-pro',
   subsets: ['latin'],
 })
 
@@ -30,14 +28,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${mavenPro.variable} antialiased flex min-h-screen flex-col`}
       >
-        <AuthProvider>
+        <TooltipProvider>
           <ErrorModalProvider>
-            {children}
-            <ErrorModal />
+            <AuthProvider>
+              <LayoutWrapper>{children}</LayoutWrapper>
+              <ErrorModal />
+            </AuthProvider>
           </ErrorModalProvider>
-        </AuthProvider>
+        </TooltipProvider>
       </body>
     </html>
   )

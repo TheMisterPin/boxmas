@@ -5,7 +5,8 @@
       "Bash(pnpm eslint:*)",
       "Bash(npx prisma migrate dev:*)",
       "Bash(npx prisma generate:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(npx shadcn@latest add:*)"
     ]
   }
 }

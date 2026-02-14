@@ -1,6 +1,7 @@
+import bcrypt from 'bcrypt'
+
 import prisma from '@/lib/prisma'
 import { BasicResponse } from '@/types/responses/basic-response'
-import bcrypt from 'bcrypt'
 
 export const getUserByEmail = async (email: string): Promise<BasicResponse> => {
   try {

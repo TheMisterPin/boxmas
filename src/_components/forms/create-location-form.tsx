@@ -17,48 +17,39 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useErrorModal } from '@/hooks'
+import { apiClient } from '@/lib/axios'
 
-import { useErrorModal } from '../../hooks/ui/error-modal-context'
-import { createUserformSchema } from '../../utils/forms/schemas/create-user-form'
+import { createLocationformSchema } from '../../utils/forms/schemas/create-location-form'
 
-export function CreateLocationForm() {
+interface CreateLocationFormProps {
+  onSuccess?: () => void;
+}
+
+export function CreateLocationForm({ onSuccess }: CreateLocationFormProps) {
   const [serverSuccess, setServerSuccess] = useState<string | null>(null)
   const { openModal } = useErrorModal()
 
-  const form = useForm<z.infer<typeof createUserformSchema>>({
-    resolver: zodResolver(createUserformSchema as any),
+  const form = useForm<z.infer<typeof createLocationformSchema>>({
+    resolver: zodResolver(createLocationformSchema as any),
     defaultValues: {
       name: '',
-      email: '',
-      password: '',
     },
     mode: 'onSubmit',
   })
 
-  async function onSubmit(values: z.infer<typeof createUserformSchema>) {
+  async function onSubmit(values: z.infer<typeof createLocationformSchema>) {
     setServerSuccess(null)
 
     try {
-      const res = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      })
-
-      if (!res.ok) {
-        const payload = (await res.json().catch(() => null)) as
-          | { error?: string }
-          | null
-        openModal(payload?.error ?? 'Failed to create user')
-        return
-      }
-
-      setServerSuccess('User created.')
+      await apiClient.post('/location', values)
+      setServerSuccess('Location created.')
       form.reset()
-    } catch {
-      openModal('Failed to create user')
+      if (onSuccess) {
+        onSuccess()
+      }
+    } catch (error: any) {
+      openModal(error?.response?.data?.error ?? 'Failed to create location')
     }
   }
 
@@ -70,47 +61,9 @@ export function CreateLocationForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Location Name</FormLabel>
               <FormControl>
-                <Input autoComplete="name" placeholder="Jane Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  autoComplete="email"
-                  placeholder="jane@example.com"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  {...field}
-                />
+                <Input placeholder="Living Room" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -124,7 +77,7 @@ export function CreateLocationForm() {
         )}
 
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? 'Creating...' : 'Create user'}
+          {form.formState.isSubmitting ? 'Creating...' : 'Create Location'}
         </Button>
       </form>
     </Form>

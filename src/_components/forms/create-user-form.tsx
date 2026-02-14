@@ -4,6 +4,7 @@
 import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { UserRoundPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -17,8 +18,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
+import { useErrorModal } from '@/hooks'
 
-import { useErrorModal } from '../../hooks/ui/error-modal-context'
 import { createUserformSchema } from '../../utils/forms/schemas/create-user-form'
 
 export function CreateUserForm() {
@@ -64,68 +66,72 @@ export function CreateUserForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input autoComplete="name" placeholder="Jane Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className=" flex flex-col p-4 border-2 border-slate-400/50 rounded-md justify-around">
+        <div className=" h-5/6 gap-4  flex flex-col my-auto ">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input autoComplete="name" placeholder="Jane Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  type="email"
-                  autoComplete="email"
-                  placeholder="jane@example.com"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="my-auto">
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    autoComplete="email"
+                    placeholder="jane@example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="my-auto">
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         {serverSuccess && (
           <p className="text-sm" role="status">
             {serverSuccess}
           </p>
         )}
+        <div className='mx-auto w-2/3'>
+          <Button type="submit" className='w-full bg-linear-to-r hover:bg-linear-to-l from-slate-500 to-slate-700 mt-4 transition-all duration-150' disabled={form.formState.isSubmitting}>
 
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? 'Creating...' : 'Create user'}
-        </Button>
+            {form.formState.isSubmitting ? <Spinner /> : <UserRoundPlus />}
+            {form.formState.isSubmitting ? 'Creating...' : 'Sign Up'}
+          </Button>
+        </div>
       </form>
     </Form>
   )

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+
 import { verifyToken } from './src/utils/auth/verify-token'
 
 // Define protected and public routes

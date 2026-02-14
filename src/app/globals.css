@@ -123,4 +123,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  .dev{
+    border: solid 2px red;
+  }
 }
