@@ -19,6 +19,10 @@ import {
 import { useAuth } from '@/hooks'
 import { stopStream } from '@/utils/camera'
 
+interface BarcodeDetector {
+  detect(image: CanvasImageSource): Promise<Array<{ rawValue: string }>>
+}
+
 export default function Home() {
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
@@ -83,7 +87,7 @@ export default function Home() {
 
     try {
       if ((window as any).BarcodeDetector) {
-        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] }) as BarcodeDetector
+        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] })
         detectorRef.current = detector
 
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
