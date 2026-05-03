@@ -44,13 +44,14 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ error: auth.error || 'Unauthorized' }, { status: 401 })
     }
 
-    const { name, description, closedImage, contentsImage } = await req.json()
+    const { name, description, closedImage, contentsImage, collectionId } = await req.json()
 
     const result = await updateBox(auth.userId, boxId, {
       name,
       description,
       closedImage,
       contentsImage,
+      collectionId,
     })
     if (result.success) {
       return NextResponse.json(result.data, { status: 200 })

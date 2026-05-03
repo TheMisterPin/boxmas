@@ -34,6 +34,23 @@ export async function getBoxesByLocation(
   }
 }
 
+
+export async function getBoxesByCollection(userId: string, collectionId: string): Promise<BasicResponse> {
+  try {
+    const boxes = await prisma.box.findMany({
+      where: {
+        collectionId,
+        location: { userId },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return { success: true, data: boxes, message: 'Boxes retrieved successfully' }
+  } catch (error) {
+    return { success: false, data: null, error, message: 'Failed to retrieve boxes', code: 500 }
+  }
+}
+
 export async function getBoxesByUser(userId: string): Promise<BasicResponse> {
   try {
     const boxes = await prisma.box.findMany({
@@ -161,6 +178,7 @@ export async function updateBox(
     description?: string | null
     closedImage?: string | null
     contentsImage?: string | null
+    collectionId?: string | null
   },
 ): Promise<BasicResponse> {
   try {
@@ -186,7 +204,8 @@ export async function updateBox(
       !data.name &&
       data.description === undefined &&
       data.closedImage === undefined &&
-      data.contentsImage === undefined
+      data.contentsImage === undefined &&
+      data.collectionId === undefined
     ) {
       return {
         success: false,
@@ -203,6 +222,7 @@ export async function updateBox(
         description: data.description ?? undefined,
         closedImage: data.closedImage ?? undefined,
         contentsImage: data.contentsImage ?? undefined,
+        collectionId: data.collectionId ?? undefined,
       },
     })
 

@@ -7,6 +7,7 @@ export interface API_Box {
     locationId: string;
     createdAt: string;
     updatedAt: string;
+    collectionId?: string | null;
 }
 
-export type Box = Pick<API_Box, 'id' | 'name' | 'description' | 'locationId' | 'closedImage' | 'contentsImage'>;
+export type Box = Pick<API_Box, 'id' | 'name' | 'description' | 'locationId' | 'closedImage' | 'contentsImage' | 'collectionId'>;

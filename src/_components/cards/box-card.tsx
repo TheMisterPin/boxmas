@@ -46,6 +46,9 @@ export function BoxCard(props : BoxCardProps) {
   const [contentsImage, setContentsImage] = useState<string>(box?.contentsImage ?? '')
   const [uploadingClosed, setUploadingClosed] = useState(false)
   const [uploadingContents, setUploadingContents] = useState(false)
+  const [collectionOpen, setCollectionOpen] = useState(false)
+  const [collectionName, setCollectionName] = useState('')
+  const [savingCollection, setSavingCollection] = useState(false)
 
   const startPress = () => {
     setLongPressTriggered(false)
@@ -98,6 +101,38 @@ export function BoxCard(props : BoxCardProps) {
     }
   }
 
+  const handleAddToCollection = async () => {
+    if (!boxId) {
+      return
+    }
+    if (!collectionName.trim()) {
+      openModal('Collection name is required')
+      return
+    }
+
+    try {
+      setSavingCollection(true)
+      const collection = await apiClient.post<{ id: string }>('/collection', { name: collectionName })
+      await apiClient.patch(`/box/${boxId}`, { collectionId: collection.id })
+      setCollectionName('')
+      setCollectionOpen(false)
+      if (onUpdated) {
+        onUpdated()
+      }
+    } catch (error: any) {
+      openModal(error?.response?.data?.error ?? 'Failed to add to collection')
+    } finally {
+      setSavingCollection(false)
+    }
+  }
+
+  const handleSeeCollection = () => {
+    if (!box?.collectionId) {
+      return
+    }
+    router.push(`/collections?collectionId=${box.collectionId}`)
+  }
+
   const handleSave = async () => {
     if (!boxId) {
       openModal('Box id is missing')
@@ -140,8 +175,39 @@ export function BoxCard(props : BoxCardProps) {
           {box?.description && (
             <div className="text-sm text-muted-foreground">{box.description}</div>
           )}
+          <div className="mt-2 flex gap-2">
+            <Button type="button" size="sm" variant="secondary" onClick={(event) => {
+              event.stopPropagation()
+              setCollectionOpen(true)
+            }}>Add to collection</Button>
+            {box?.collectionId && (
+              <Button type="button" size="sm" onClick={(event) => {
+                event.stopPropagation()
+                handleSeeCollection()
+              }}>See collection</Button>
+            )}
+          </div>
         </ItemContent>
       </Item>
+
+      <Dialog open={collectionOpen} onOpenChange={setCollectionOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add to collection</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <Input
+              value={collectionName}
+              onChange={(event) => setCollectionName(event.target.value)}
+              placeholder="Collection name"
+              disabled={savingCollection}
+            />
+            <Button type="button" onClick={handleAddToCollection} disabled={savingCollection}>
+              {savingCollection ? 'Saving...' : 'Save'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={actionsOpen} onOpenChange={setActionsOpen}>
         <DialogContent>
