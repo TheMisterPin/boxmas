@@ -73,7 +73,10 @@ export default function CollectionsPage() {
     <div className="flex flex-1 flex-col gap-4 p-4">
       <div className="container h-full rounded-md border-2 border-slate-400/50 p-4 justify-around">
         <div className="mb-6 flex items-center justify-between gap-4 px-10">
-          <h1 className="text-2xl font-bold">Collections</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold">Collections</h1>
+            <a href="/collections/pick" className="text-sm text-blue-600 underline">Pick flow</a>
+          </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <PlusCircle className="h-6 w-6 text-stone-600" />
