@@ -98,6 +98,25 @@ export function BoxCard(props : BoxCardProps) {
     }
   }
 
+  const handleAddToCollection = async () => {
+    if (!boxId) return
+    const collectionName = window.prompt('Collection name')
+    if (!collectionName) return
+
+    try {
+      const collection = await apiClient.post<{ id: string }>('/collection', { name: collectionName })
+      await apiClient.patch(`/box/${boxId}`, { collectionId: collection.id })
+      if (onUpdated) onUpdated()
+    } catch (error: any) {
+      openModal(error?.response?.data?.error ?? 'Failed to add to collection')
+    }
+  }
+
+  const handleSeeCollection = () => {
+    if (!box?.collectionId) return
+    router.push(`/collections?collectionId=${box.collectionId}`)
+  }
+
   const handleSave = async () => {
     if (!boxId) {
       openModal('Box id is missing')
@@ -140,6 +159,12 @@ export function BoxCard(props : BoxCardProps) {
           {box?.description && (
             <div className="text-sm text-muted-foreground">{box.description}</div>
           )}
+          <div className="mt-2 flex gap-2">
+            <Button type="button" size="sm" variant="secondary" onClick={(event) => { event.stopPropagation(); handleAddToCollection() }}>Add to collection</Button>
+            {box?.collectionId && (
+              <Button type="button" size="sm" onClick={(event) => { event.stopPropagation(); handleSeeCollection() }}>See collection</Button>
+            )}
+          </div>
         </ItemContent>
       </Item>
 

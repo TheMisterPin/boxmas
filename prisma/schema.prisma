@@ -32,7 +32,8 @@ model Location {
   updatedAt DateTime @updatedAt
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  boxes     Box[]
+  boxes       Box[]
+  collections Collection[]
 }
 
 model Box {
@@ -44,7 +45,9 @@ model Box {
   locationId    String
   location      Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime    @updatedAt
+  collectionId  String?
+  collection    Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
 }
 
 model Session {
@@ -61,4 +64,17 @@ model Session {
   @@index([userId])
   @@index([token])
   @@index([expiresAt])
+}
+
+
+model Collection {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boxes     Box[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
