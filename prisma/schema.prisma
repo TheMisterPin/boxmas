@@ -14,40 +14,44 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  email     String     @unique
-  password  String
-  name      String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  locations Location[]
-  sessions  Session[]
+  id          String       @id @default(uuid())
+  email       String       @unique
+  password    String
+  name        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  locations   Location[]
+  sessions    Session[]
+  collections Collection[]
 }
 
 model Location {
-  id        String   @id @default(uuid())
-  name      String
-  icon      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id          String       @id @default(uuid())
+  name        String
+  icon        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
   boxes       Box[]
   collections Collection[]
 }
 
 model Box {
-  id            String   @id @default(uuid())
+  id            String      @id @default(uuid())
   name          String
   description   String?
   closedImage   String?
   contentsImage String?
   locationId    String
-  location      Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
+  location      Location    @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   collectionId  String?
   collection    Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  items         Item[]
+  storedAt      DateTime    @default(now())
+  lastMovedAt   DateTime    @default(now())
 }
 
 model Session {
@@ -66,15 +70,33 @@ model Session {
   @@index([expiresAt])
 }
 
-
 model Collection {
-  id        String   @id @default(uuid())
-  name      String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  boxes     Box[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String    @id @default(uuid())
+  name       String
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boxes      Box[]
+  items      Item[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  location   Location? @relation(fields: [locationId], references: [id])
+  locationId String?
 
   @@index([userId])
+}
+
+model Item {
+  id           String      @id @default(uuid())
+  name         String
+  description  String?
+  collectionId String?
+  collection   Collection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  boxId        String
+  box          Box         @relation(fields: [boxId], references: [id], onDelete: Cascade)
+  addedAt      DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([name])
+  @@index([boxId])
 }

@@ -8,6 +8,8 @@ export interface API_Box {
     createdAt: string;
     updatedAt: string;
     collectionId?: string | null;
+    storedAt: string;
+    lastMovedAt: string;
 }
 
 export type Box = Pick<API_Box, 'id' | 'name' | 'description' | 'locationId' | 'closedImage' | 'contentsImage' | 'collectionId'>;
